@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0d0a14;
+    color: #e8dfc8;
+    font-family: 'Crimson Pro', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .stars {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0;
+    background: radial-gradient(ellipse at 20% 50%, #1a0a2e 0%, #0d0a14 60%);
+  }
+  .star {
+    position: absolute; background: #fff; border-radius: 50%;
+    animation: twinkle var(--d) ease-in-out infinite alternate;
+    opacity: var(--o);
+  }
+  @keyframes twinkle { from { opacity: var(--o); } to { opacity: calc(var(--o) * 0.2); } }
+
+  .container {
+    position: relative; z-index: 1;
+    max-width: 780px; margin: 0 auto; padding: 2rem 1.5rem 4rem;
+  }
+
+  header { text-align: center; padding: 3rem 0 2rem; }
+
+  .logo-horse {
+    font-size: 64px; display: block; margin-bottom: 0.5rem;
+    animation: float 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 18px #a78bfa88);
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.5rem, 5vw, 2.4rem);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    background: linear-gradient(135deg, #e8c97a, #c4a0e8, #7dd3c8);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.4rem;
+  }
+
+  .tagline {
+    font-style: italic; font-size: 1.05rem;
+    color: #a89fc0; letter-spacing: 0.05em;
+  }
+
+  .divider {
+    display: flex; align-items: center; gap: 1rem;
+    margin: 2rem 0;
+    color: #4a3f6b;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1;
+    border-top: 1px solid #4a3f6b;
+  }
+  .divider-inner { font-size: 18px; }
+
+  .panel {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(167,139,250,0.2);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(4px);
+  }
+
+  label {
+    display: block;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: #a78bfa;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+
+  textarea {
+    width: 100%; min-height: 110px;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(167,139,250,0.3);
+    border-radius: 10px;
+    color: #e8dfc8;
+    font-family: 'Crimson Pro', serif;
+    font-size: 1rem;
+    padding: 0.8rem 1rem;
+    resize: vertical;
+    transition: border-color 0.3s;
+    line-height: 1.6;
+  }
+  textarea:focus { outline: none; border-color: #a78bfa; }
+  textarea::placeholder { color: #5c5172; font-style: italic; }
+
+  .horse-types {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 0.6rem; margin-top: 0.6rem;
+  }
+  .horse-type {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(167,139,250,0.2);
+    border-radius: 10px;
+    padding: 0.7rem 0.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s;
+    font-family: 'Crimson Pro', serif;
+    font-size: 0.88rem;
+    color: #c4b8d8;
+  }
+  .horse-type:hover { border-color: #a78bfa; background: rgba(167,139,250,0.08); }
+  .horse-type.selected {
+    border-color: #a78bfa;
+    background: rgba(167,139,250,0.15);
+    color: #e8dfc8;
+  }
+  .horse-type .ht-emoji { font-size: 22px; display: block; margin-bottom: 4px; }
+
+  .btn-reveal {
+    width: 100%;
+    padding: 1rem;
+    margin-top: 1.5rem;
+    background: linear-gradient(135deg, #4c2a85, #2a4a7a);
+    border: 1px solid #a78bfa55;
+    border-radius: 12px;
+    color: #e8dfc8;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .btn-reveal:hover {
+    background: linear-gradient(135deg, #5e3899, #3a5a9a);
+    box-shadow: 0 0 24px #a78bfa44;
+    transform: translateY(-1px);
+  }
+  .btn-reveal:active { transform: scale(0.98); }
+
+  .loading {
+    display: none; text-align: center;
+    padding: 2rem; font-style: italic; color: #a78bfa;
+    font-size: 1rem;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+  .reading {
+    display: none;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(196,160,232,0.3);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-top: 1.5rem;
+    animation: fadeUp 0.6s ease forwards;
+  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .reading-horse {
+    text-align: center; font-size: 52px; margin-bottom: 1rem;
+    animation: float 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 14px #c4a0e888);
+  }
+
+  .reading-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    color: #e8c97a;
+    text-align: center;
+    margin-bottom: 0.3rem;
+  }
+
+  .reading-horse-name {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.25rem;
+    text-align: center;
+    color: #c4a0e8;
+    margin-bottom: 1.5rem;
+  }
+
+  .reading-body {
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: #d4cac0;
+    white-space: pre-wrap;
+  }
+
+  .reading-signature {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(167,139,250,0.2);
+    text-align: right;
+    font-style: italic;
+    color: #7a6e90;
+    font-size: 0.9rem;
+  }
+
+  .btn-again {
+    display: block; margin: 1.2rem auto 0;
+    padding: 0.6rem 1.5rem;
+    background: transparent;
+    border: 1px solid rgba(167,139,250,0.4);
+    border-radius: 8px;
+    color: #a78bfa;
+    font-family: 'Crimson Pro', serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.25s;
+    font-style: italic;
+  }
+  .btn-again:hover { background: rgba(167,139,250,0.1); border-color: #a78bfa; }
+
+  .testimonials { margin-top: 3rem; }
+  .testimonials h2 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: #4a3f6b;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 1.2rem;
+  }
+  .testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+  .testimonial {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+  }
+  .testimonial-text { font-style: italic; font-size: 0.9rem; color: #a89fc0; line-height: 1.65; margin-bottom: 0.6rem; }
+  .testimonial-author { font-size: 0.78rem; color: #5c5172; }
+
+  footer {
+    text-align: center; margin-top: 3rem;
+    font-size: 0.78rem; color: #3d3454;
+    letter-spacing: 0.05em;
+  }
+</style>
+
+<div class="stars" id="stars"></div>
+
+<div class="container">
+  <header>
+    <span class="logo-horse">🐴</span>
+    <h1>HorseDreamings</h1>
+    <p class="tagline">Every dream has a horse. Every horse has something to say about your life choices.</p>
+  </header>
+
+  <div class="divider"><span class="divider-inner">✦</span></div>
+
+  <div class="panel">
+    <label>Describe the horse from your dream (or any horse, really)</label>
+    <textarea id="horse-desc" placeholder="e.g. A pale horse wearing reading glasses, standing in my childhood kitchen, judging me silently…"></textarea>
+
+    <label style="margin-top:1.4rem;">What kind of horse was it?</label>
+    <div class="horse-types" id="horse-types">
+      <div class="horse-type" data-type="Spectral">
+        <span class="ht-emoji">👻</span>Spectral
+      </div>
+      <div class="horse-type" data-type="Judgmental">
+        <span class="ht-emoji">😒</span>Judgmental
+      </div>
+      <div class="horse-type" data-type="Wise">
+        <span class="ht-emoji">🧙</span>Ancient & Wise
+      </div>
+      <div class="horse-type" data-type="Tiny">
+        <span class="ht-emoji">🔬</span>Inexplicably Tiny
+      </div>
+      <div class="horse-type" data-type="Business">
+        <span class="ht-emoji">💼</span>Business Horse
+      </div>
+      <div class="horse-type" data-type="Unknown">
+        <span class="ht-emoji">❓</span>I Don't Know
+      </div>
+    </div>
+
+    <button class="btn-reveal" onclick="getReading()">✦ Reveal My Equine Reading ✦</button>
+  </div>
+
+  <div class="loading" id="loading">
+    🐴 The horse is thinking about your life...
+  </div>
+
+  <div class="reading" id="reading">
+    <div class="reading-horse" id="reading-emoji">🐎</div>
+    <div class="reading-title">Your dream horse was</div>
+    <div class="reading-horse-name" id="reading-horse-name">Garbanthos the Unbothered</div>
+    <div class="reading-body" id="reading-body"></div>
+    <div class="reading-signature" id="reading-sig"></div>
+    <button class="btn-again" onclick="resetForm()">Consult another horse →</button>
+  </div>
+
+  <div class="testimonials">
+    <h2>Satisfied Dreamers</h2>
+    <div class="testimonial-grid">
+      <div class="testimonial">
+        <div class="testimonial-text">"The horse told me I need to call my mother. I haven't spoken to her in 3 years. The horse was right."</div>
+        <div class="testimonial-author">— Brendt K., accountant</div>
+      </div>
+      <div class="testimonial">
+        <div class="testimonial-text">"My dream horse wore a turtleneck and wouldn't make eye contact. The reading said I fear intimacy. Five stars."</div>
+        <div class="testimonial-author">— Anonymous (probably fine)</div>
+      </div>
+      <div class="testimonial">
+        <div class="testimonial-text">"I didn't have a dream horse. I submitted my neighbor's horse anyway. The reading was uncomfortably accurate about me."</div>
+        <div class="testimonial-author">— Delia F., retired</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    © HorseDreamings.com — Not affiliated with horses, dreams, or reality.<br>
+    All spiritual readings are certified by the Council of Equine Metaphysics (unaccredited).
+  </footer>
+</div>
+
+<script>
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 90; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.5 + 0.5;
+    s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${2+Math.random()*4}s;--o:${0.2+Math.random()*0.6};animation-delay:${Math.random()*4}s`;
+    starsEl.appendChild(s);
+  }
+
+  let selectedType = '';
+  document.querySelectorAll('.horse-type').forEach(el => {
+    el.addEventListener('click', () => {
+      document.querySelectorAll('.horse-type').forEach(e => e.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedType = el.dataset.type;
+    });
+  });
+
+  const horseNames = [
+    "Garbanthos the Unbothered","Celestia of the Third Pasture","Mournful Steve","Lord Clopsworth VI",
+    "The Beige One","Whinnifer of the Mist","Horatio Grimhoof","Princess Blankface","Dobbin the Knowing",
+    "Equinox Pendragon, Esq.","Barnaby Oatsworth","The Eternal Mare","Shadowfax's Lesser Cousin","Regret"
+  ];
+  const emojis = ["🐎","🐴","🦄","🐐"];
+
+  async function getReading() {
+    const desc = document.getElementById('horse-desc').value.trim();
+    if (!desc) {
+      document.getElementById('horse-desc').style.borderColor = '#e8537a';
+      setTimeout(() => document.getElementById('horse-desc').style.borderColor = 'rgba(167,139,250,0.3)', 1500);
+      return;
+    }
+
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('reading').style.display = 'none';
+    document.querySelector('.btn-reveal').disabled = true;
+
+    const horseName = horseNames[Math.floor(Math.random() * horseNames.length)];
+    const emojiChoice = emojis[Math.floor(Math.random() * emojis.length)];
+    const type = selectedType || 'mysterious';
+
+    const prompt = `You are ${horseName}, a ${type} dream horse interpreter for the fake spiritual website HorseDreamings.com. 
+
+A visitor had a dream horse described as: "${desc}"
+
+Write a deeply personal, absurdly specific spiritual life reading for this person based solely on the horse. Be surreal, funny, and eerily precise about their life choices and personal failings. Use dramatic spiritual language mixed with mundane observations. Reference specific things like their eating habits, career choices, or emotional unavailability. End with one cryptic piece of advice from the horse.
+
+Write 3-4 short paragraphs. Do NOT use headers. Sign off with a dramatic equine phrase like "— Neighed into the void," or "— Stomped twice for emphasis," etc. Keep it under 250 words.`;
+
+    try {
+      const resp = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+          max_tokens: 1000,
+          messages: [{ role: "user", content: prompt }]
+        })
+      });
+      const data = await resp.json();
+      const text = data.content?.[0]?.text || "The horse has nothing to say. That itself is the message.";
+
+      const lines = text.trim().split('\n');
+      const sigLine = lines.findLast(l => l.startsWith('—') || l.startsWith('-'));
+      const body = sigLine ? lines.filter(l => l !== sigLine).join('\n').trim() : text;
+      const sig = sigLine || `— Stomped twice for emphasis`;
+
+      document.getElementById('reading-emoji').textContent = emojiChoice;
+      document.getElementById('reading-horse-name').textContent = horseName;
+      document.getElementById('reading-body').textContent = body;
+      document.getElementById('reading-sig').textContent = sig;
+
+    } catch (e) {
+      document.getElementById('reading-body').textContent = "The horse stared at you for a long time. Then it walked away. You know what you did.";
+      document.getElementById('reading-sig').textContent = "— Departed without comment";
+    }
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('reading').style.display = 'block';
+    document.querySelector('.btn-reveal').disabled = false;
+  }
+
+  function resetForm() {
+    document.getElementById('reading').style.display = 'none';
+    document.getElementById('horse-desc').value = '';
+    document.querySelectorAll('.horse-type').forEach(e => e.classList.remove('selected'));
+    selectedType = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
